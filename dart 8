@@ -63,7 +63,7 @@ void _countGrades(Map<String, Map<String, int>> journal) {
       if (counts.containsKey(grade)) counts[grade] = counts[grade]! + 1;
     });
   });
-  counts.forEach((grade, count) => print('Оценка $count: $count раз'));
+  counts.forEach((grade, count) => print('Оценка $grade: $count раз');
 }
 
 void _studentsWithFivesPerSubject(Map<String, Map<String, int>> journal) {
