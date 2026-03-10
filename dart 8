@@ -1,163 +1,171 @@
+
 void main() {
-  final Map<String, Map<String, int>> journal = {
-    'Иванов': {'Математика': 5, 'Физика': 4, 'История': 5},
-    'Петров': {'Математика': 4, 'Физика': 3, 'История': 4},
-    'Сидоров': {'Математика': 2, 'Физика': 2, 'История': 3},
-    'Смирнов': {'Математика': 5, 'Физика': 5, 'История': 5},
-    'Кузнецов': {'Математика': 3, 'Физика': 4, 'История': 2},
-  };
+  List<String> students = ['Иванов', 'Петров', 'Сидоров', 'Смирнов', 'Кузнецов', 'Попов'];
+  List<String> subjects = ['Математика', 'Физика', 'История', 'Информатика', 'Химия', 'Биология'];
+  
+  List<List<int>> grades = [
+    [5, 5, 5, 4, 5, 5],  // Иванов
+    [4, 4, 3, 4, 4, 3],  // Петров
+    [2, 3, 2, 3, 2, 3],  // Сидоровф
+    [5, 5, 5, 5, 5, 5],  // Смирнов
+    [3, 4, 2, 4, 3, 4],  // Кузнецов
+    [4, 3, 4, 2, 4, 3],  // Попов
+  ];
 
   print(' 1. Категории студентов по среднему баллу ');
-  _categorizeStudents(journal);
-
-  print('\n 2. Количество каждой оценки (2, 3, 4, 5) ');
-  _countGrades(journal);
-
-  print('\n 3. Студенты с пятерками по предметам ');
-  _studentsWithFivesPerSubject(journal);
-
-  print('\n 4. Предметы без двоек ');
-  _subjectsWithoutFails(journal);
-
-  print('\n 5. Предмет с наибольшим количеством двоек ');
-  _subjectWithMostFails(journal);
-
-  print('\n 6. Студенты с наибольшим количеством пятёрок ');
-  _studentsWithMostFives(journal);
-
-  print('\n 7. Предметы с оценкой ниже 4 у студентов ');
-  _lowGradesPerStudent(journal);
-
-  print('\n 8. Все пары "Студент - Предмет" с оценкой 5 ');
-  _pairsWithFives(journal);
-}
-
-void _categorizeStudents(Map<String, Map<String, int>> journal) {
+  
   List<String> excellent = [];
   List<String> good = [];
   List<String> others = [];
-
-  journal.forEach((student, subjects) {
-    double sum = 0;
-    subjects.forEach((_, grade) => sum += grade);
+  
+  for (int i = 0; i < students.length; i++) {
+    int sum = 0;
+    for (int j = 0; j < subjects.length; j++) {
+      sum = sum + grades[i][j];
+    }
     double avg = sum / subjects.length;
-
+    
     if (avg >= 4.5) {
-      excellent.add(student);
+      excellent.add(students[i]);
     } else if (avg >= 3.5) {
-      good.add(student);
+      good.add(students[i]);
     } else {
-      others.add(student);
+      others.add(students[i]);
     }
-  });
+  }
+  
+  print('Отличники (>= 4.5):');
+  if (excellent.length == 0) print('  Нет');
+  for (int i = 0; i < excellent.length; i++) print('  ' + excellent[i]);
+  
+  print('Хорошисты (3.5 - 4.5):');
+  if (good.length == 0) print('  Нет');
+  for (int i = 0; i < good.length; i++) print('  ' + good[i]);
+  
+  print('Остальные:');
+  if (others.length == 0) print('  Нет');
+  for (int i = 0; i < others.length; i++) print('  ' + others[i]);
 
-  print('Отличники (≥ 4.5): ${excellent.isEmpty ? "Нет" : excellent.join(", ")}');
-  print('Хорошисты (3.5 - 4.5): ${good.isEmpty ? "Нет" : good.join(", ")}');
-  print('Остальные: ${others.isEmpty ? "Нет" : others.join(", ")}');
-}
-
-void _countGrades(Map<String, Map<String, int>> journal) {
-  Map<int, int> counts = {2: 0, 3: 0, 4: 0, 5: 0};
-  journal.forEach((_, subjects) {
-    subjects.forEach((_, grade) {
-      if (counts.containsKey(grade)) counts[grade] = counts[grade]! + 1;
-    });
-  });
-  counts.forEach((grade, count) => print('Оценка $grade: $count раз');
-}
-
-void _studentsWithFivesPerSubject(Map<String, Map<String, int>> journal) {
-  Set<String> allSubjects = {};
-  journal.forEach((_, subjects) => allSubjects.addAll(subjects.keys));
-
-  allSubjects.forEach((subject) {
-    List<String> studentsWith5 = [];
-    journal.forEach((student, subjects) {
-      if (subjects[subject] == 5) studentsWith5.add(student);
-    });
-    if (studentsWith5.isNotEmpty) {
-      print('$subject: ${studentsWith5.join(", ")}');
+  print('\n 2. Количество каждой оценки (2, 3, 4, 5) ');
+  
+  int count2 = 0;
+  int count3 = 0;
+  int count4 = 0;
+  int count5 = 0;
+  
+  for (int i = 0; i < students.length; i++) {
+    for (int j = 0; j < subjects.length; j++) {
+      if (grades[i][j] == 2) count2++;
+      if (grades[i][j] == 3) count3++;
+      if (grades[i][j] == 4) count4++;
+      if (grades[i][j] == 5) count5++;
     }
-  });
-}
+  }
+  
+  print('Оценка 2: ' + count2.toString() + ' раз');
+  print('Оценка 3: ' + count3.toString() + ' раз');
+  print('Оценка 4: ' + count4.toString() + ' раз');
+  print('Оценка 5: ' + count5.toString() + ' раз');
 
-void _subjectsWithoutFails(Map<String, Map<String, int>> journal) {
-  Set<String> allSubjects = {};
-  journal.forEach((_, subjects) => allSubjects.addAll(subjects.keys));
+  print('\n 3. Студенты с пятерками по предметам ');
+  
+  for (int j = 0; j < subjects.length; j++) {
+    print(subjects[j] + ':');
+    bool hasFive = false;
+    for (int i = 0; i < students.length; i++) {
+      if (grades[i][j] == 5) {
+        print('  ' + students[i]);
+        hasFive = true;
+      }
+    }
+    if (!hasFive) print('  Нет');
+  }
 
-  List<String> noFails = [];
-  allSubjects.forEach((subject) {
+  print('\n 4. Предметы без двоек ');
+  
+  for (int j = 0; j < subjects.length; j++) {
     bool hasFail = false;
-    journal.forEach((_, subjects) {
-      if (subjects[subject] == 2) hasFail = true;
-    });
-    if (!hasFail) noFails.add(subject);
-  });
-  print(noFails.isEmpty ? "Нет таких предметов" : noFails.join(", "));
-}
-
-void _subjectWithMostFails(Map<String, Map<String, int>> journal) {
-  Set<String> allSubjects = {};
-  journal.forEach((_, subjects) => allSubjects.addAll(subjects.keys));
-
-  String maxSubject = "";
-  int maxCount = -1;
-
-  allSubjects.forEach((subject) {
-    int count = 0;
-    journal.forEach((_, subjects) {
-      if (subjects[subject] == 2) count++;
-    });
-    if (count > maxCount) {
-      maxCount = count;
-      maxSubject = subject;
+    for (int i = 0; i < students.length; i++) {
+      if (grades[i][j] == 2) hasFail = true;
     }
-  });
+    if (!hasFail) print('  ' + subjects[j]);
+  }
 
-  if (maxCount > 0) {
-    print('Предмет: $maxSubject, количество двоек: $maxCount');
+  print('\n 5. Предмет с наибольшим количеством двоек ');
+  
+  int maxFails = 0;
+  int maxSubjectIndex = -1;
+  
+  for (int j = 0; j < subjects.length; j++) {
+    int count = 0;
+    for (int i = 0; i < students.length; i++) {
+      if (grades[i][j] == 2) count++;
+    }
+    if (count > maxFails) {
+      maxFails = count;
+      maxSubjectIndex = j;
+    }
+  }
+  
+  if (maxFails > 0) {
+    print('Предмет: ' + subjects[maxSubjectIndex]);
+    print('Количество двоек: ' + maxFails.toString());
   } else {
     print('Двоек нет ни по одному предмету');
   }
-}
 
-void _studentsWithMostFives(Map<String, Map<String, int>> journal) {
-  Map<String, int> fivesCount = {};
+  print('\n 6. Студенты с наибольшим количеством пятёрок ');
+  
   int maxFives = 0;
-
-  journal.forEach((student, subjects) {
+  List<int> maxFivesIndexes = [];
+  
+  for (int i = 0; i < students.length; i++) {
     int count = 0;
-    subjects.forEach((_, grade) {
-      if (grade == 5) count++;
-    });
-    fivesCount[student] = count;
-    if (count > maxFives) maxFives = count;
-  });
-
-  fivesCount.forEach((student, count) {
-    if (count == maxFives && count > 0) {
-      print('$student: $count пятёрок');
+    for (int j = 0; j < subjects.length; j++) {
+      if (grades[i][j] == 5) count++;
     }
-  });
-  if (maxFives == 0) print('Пятёрок нет ни у кого');
-}
+    if (count > maxFives) {
+      maxFives = count;
+      maxFivesIndexes = [i];
+    } else if (count == maxFives && count > 0) {
+      maxFivesIndexes.add(i);
+    }
+  }
+  
+  if (maxFives > 0) {
+    for (int k = 0; k < maxFivesIndexes.length; k++) {
+      print(students[maxFivesIndexes[k]] + ': ' + maxFives.toString() + ' пятёрок');
+    }
+  } else {
+    print('Пятёрок нет ни у кого');
+  }
 
-void _lowGradesPerStudent(Map<String, Map<String, int>> journal) {
-  journal.forEach((student, subjects) {
+  print('\n 7. Предметы с оценкой ниже 4 у студентов ');
+  
+  for (int i = 0; i < students.length; i++) {
     List<String> lowSubjects = [];
-    subjects.forEach((subject, grade) {
-      if (grade < 4) lowSubjects.add(subject);
-    });
-    print('$student: предметов ниже 4 -> ${lowSubjects.length} (${lowSubjects.isEmpty ? "нет" : lowSubjects.join(", ")})');
-  });
-}
-
-void _pairsWithFives(Map<String, Map<String, int>> journal) {
-  journal.forEach((student, subjects) {
-    subjects.forEach((subject, grade) {
-      if (grade == 5) {
-        print('$student — $subject');
+    for (int j = 0; j < subjects.length; j++) {
+      if (grades[i][j] < 4) {
+        lowSubjects.add(subjects[j]);
       }
-    });
-  });
+    }
+    print(students[i] + ': предметов ниже 4 -> ' + lowSubjects.length.toString());
+    if (lowSubjects.length == 0) {
+      print('  (нет)');
+    } else {
+      for (int k = 0; k < lowSubjects.length; k++) {
+        print('  ' + lowSubjects[k]);
+      }
+    }
+  }
+
+  print('\n 8. Все пары "Студент - Предмет" с оценкой 5 ');
+  
+  for (int i = 0; i < students.length; i++) {
+    for (int j = 0; j < subjects.length; j++) {
+      if (grades[i][j] == 5) {
+        print(students[i] + ' - ' + subjects[j]);
+      }
+    }
+  }
 }
